@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Vazir';
+  src: url('./assets/Vazir.ttf') format('truetype');
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+body {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  overflow: scroll;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Vazir', 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+ul {
+  list-style: none;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

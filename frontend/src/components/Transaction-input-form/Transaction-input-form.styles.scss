@@ -1,0 +1,96 @@
+.form-input {
+  direction: rtl;
+  width: 700px;
+  background: #fff;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  margin: 1rem;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
+  h2 {
+    padding: 1rem;
+  }
+  p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 700px;
+    padding: 0 1rem 1rem 1rem;
+  }
+  .btn {
+    font-family: -apple-system, BlinkMacSystemFont, 'Vazir', 'Segoe UI',
+      'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+      'Helvetica Neue', sans-serif;
+    display: inline-block;
+    font-size: 16px;
+    padding: 10px 0 12px 0;
+
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(
+      45deg,
+      rgba(26, 108, 33, 0.678),
+      rgba(56, 56, 56, 0.678),
+      rgba(26, 108, 33, 0.678)
+    );
+    border: 2px solid #fff;
+    width: 98%;
+  }
+  .btn-blue {
+    background: linear-gradient(
+      45deg,
+      rgba(26, 105, 108, 0.678),
+      rgba(45, 42, 216, 0.616)
+    );
+  }
+  .form {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .aaaainputs {
+      display: flex;
+
+      .form-control {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        position: relative;
+        margin-left: 1.5rem;
+        label {
+          display: flex;
+          direction: rtl;
+          color: #000;
+          font-size: 10px;
+          margin-left: 1rem;
+        }
+        .amount {
+          direction: ltr;
+        }
+        input {
+          border: 2px solid #f0f0f0;
+          border-radius: 4px;
+          display: block;
+          width: 100%;
+          padding: 10px;
+          font-size: 14px;
+          &:focus {
+            outline: 0;
+            border-color: #777;
+          }
+        }
+      }
+    }
+  }
+}
