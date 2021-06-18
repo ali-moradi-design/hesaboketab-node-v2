@@ -2,20 +2,44 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import moneyReducer from './money/money.reducer';
-import userReducer from './user/user.reducer';
-import alertReducer from './alert/alert.reducer';
+import {
+  userLoginReducer,
+  userRegisterReducer,
+  userDetailsReducer,
+} from './user/user.reducer';
+
+import {
+  transactionListReducer,
+  transactionDetailsReducer,
+  transactionDeleteReducer,
+  transactionCreateReducer,
+  transactionUpdateReducer,
+} from './transaction/transactions.reducer';
 
 const rootReducer = combineReducers({
-  money: moneyReducer,
-  user: userReducer,
-  alert: alertReducer,
+  transactionList: transactionListReducer,
+  transactionDetails: transactionDetailsReducer,
+  transactionDelete: transactionDeleteReducer,
+  transactionCreate: transactionCreateReducer,
+  transactionUpdate: transactionUpdateReducer,
+  userLogin: userLoginReducer,
+  userRegister: userRegisterReducer,
+  userDetails: userDetailsReducer,
 });
+
+const userInfoFromStorage = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null;
+
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+};
 
 const middleware = [thunk];
 
 const store = createStore(
   rootReducer,
+  initialState,
   composeWithDevTools(applyMiddleware(...middleware))
 );
 

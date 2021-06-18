@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectCurrentTransaction } from '../../redux/money/money.selectors';
+import { selectCurrentTransaction } from '../../redux/transaction/transactions.selectors';
 import {
   addItem,
   clearCurrentItem,
   updateItem,
-} from '../../redux/money/money.actions';
-import { setAlert, removeAlert } from '../../redux/alert/alert.actions';
+} from '../../redux/transaction/transactions.actions';
 
 import './Transaction-input-form.styles.scss';
 
@@ -16,7 +15,6 @@ const genrateID = () => Math.floor(Math.random() * 100000000);
 const TransactionInputForm = ({
   addItem,
   updateItem,
-  setAlert,
   current,
   clearCurrentItem,
 }) => {
@@ -47,11 +45,6 @@ const TransactionInputForm = ({
 
     if (current === null) {
       if (item === '' || amount === '') {
-        setAlert({
-          msg: ' لطفا فیلد ها پر کنید !',
-          type: 'danger',
-          id: genrateID(),
-        });
         setTransaction({
           item: '',
           amount: '',
@@ -67,11 +60,6 @@ const TransactionInputForm = ({
       }
     } else {
       if (item === '' || amount === '') {
-        setAlert({
-          msg: ' لطفا فیلد ها پر کنید !',
-          type: 'danger',
-          id: genrateID(),
-        });
       } else {
         updateItem(transaction);
       }
@@ -151,10 +139,6 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setAlert: (item) => {
-    dispatch(setAlert(item));
-    setTimeout(() => dispatch(removeAlert(item.id)), 5000);
-  },
   addItem: (item) => dispatch(addItem(item)),
   updateItem: (item) => dispatch(updateItem(item)),
   clearCurrentItem: () => dispatch(clearCurrentItem()),

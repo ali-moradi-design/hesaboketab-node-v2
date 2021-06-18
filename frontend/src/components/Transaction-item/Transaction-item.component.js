@@ -5,7 +5,7 @@ import {
   removeItem,
   setCurrentItem,
   clearCurrentItem,
-} from '../../redux/money/money.actions';
+} from '../../redux/transaction/transactions.actions';
 import './Transaction-item.styles.scss';
 
 const TransactionItem = ({

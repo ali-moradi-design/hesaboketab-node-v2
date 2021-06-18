@@ -1,8 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectFilteredTransaction } from '../../redux/money/money.selectors';
-import { filteredItem, clearFilter } from '../../redux/money/money.actions';
+import { selectFilteredTransaction } from '../../redux/transaction/transactions.selectors';
+import {
+  filteredItem,
+  clearFilter,
+} from '../../redux/transaction/transactions.actions';
 import './transaction-filter.styles.scss';
 
 const TransactionFilter = ({ filteredItem, clearFilter, filtered }) => {

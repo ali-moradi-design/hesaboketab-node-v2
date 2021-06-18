@@ -1,37 +1,37 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { loadingUser } from '../../redux/user/user.actions';
-import TransactionInputForm from '../../components/Transaction-input-form/Transaction-input-form.component';
+import Container from '@material-ui/core/Container';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserDetails } from '../../redux/user/user.actions';
 import DisplayTransactionValues from '../../components/display-transaction-values/display-transaction-values.component';
-import TransactionListItem from '../../components/Transaction-list-item/Transaction-list-item.component';
-import RightDashboardMenu from '../../components/Right-dashboard-menu/Right-dashboard-menu.component';
-import TransactionFilter from '../../components/transaction-filter/transaction-filter.component';
-import './homepage.styles.scss';
+// import TransactionInputForm from '../../components/Transaction-input-form/Transaction-input-form.component';
+// import TransactionListItem from '../../components/Transaction-list-item/Transaction-list-item.component';
+// import TransactionFilter from '../../components/transaction-filter/transaction-filter.component';
 
-const Hompage = ({ loadingUser }) => {
+const Hompage = ({ history }) => {
+  const dispatch = useDispatch();
+
+  const userDetails = useSelector((state) => state.userDetails);
+  const { userInfo } = userDetails;
+
   useEffect(() => {
-    loadingUser();
+    if (userInfo) {
+      history.push('/');
+    }
 
-    // eslint-disable-next-line
-  }, []);
+    dispatch(getUserDetails());
+  }, [dispatch, history, userInfo]);
 
   return (
-    <div className='homepage '>
+    <Container style={{ marginTop: '6rem' }}>
       <DisplayTransactionValues />
-      <div className='group'>
+
+      {/* <div className='group'>
         <TransactionFilter />
         <TransactionListItem />
         <TransactionInputForm />
-      </div>
-      <RightDashboardMenu />
-    </div>
+      </div> */}
+    </Container>
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  loadingUser: () => {
-    dispatch(loadingUser());
-  },
-});
-
-export default connect(null, mapDispatchToProps)(Hompage);
+export default Hompage;

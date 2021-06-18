@@ -1,63 +1,58 @@
-import { UserActionTypes } from './user.types';
+import {
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_RESET,
+  USER_DETAILS_SUCCESS,
+  USER_LOGIN_FAIL,
+  USER_LOGIN_REQUEST,
+  USER_LOGIN_SUCCESS,
+  USER_LOGOUT,
+  USER_REGISTER_FAIL,
+  USER_REGISTER_REQUEST,
+  USER_REGISTER_SUCCESS,
+} from './user.types';
 
-const INITIAL_STATE = {
-  token: localStorage.getItem('token'),
-  isAuthenticated: null,
-  loading: true,
-  error: null,
-  currentUser: null,
-};
-
-const userReducer = (state = INITIAL_STATE, action) => {
+export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
-    case UserActionTypes.USER_LOADED:
-      return {
-        ...state,
-        isAuthenticated: true,
-        loading: false,
-        currentUser: action.payload,
-      };
-    case UserActionTypes.REGISTER_SUCCESS:
-    case UserActionTypes.LOGIN_SUCCESS:
-      localStorage.setItem('token', action.payload.token);
-      return {
-        ...state,
-        ...action.payload,
-        isAuthenticated: true,
-        loading: false,
-      };
-
-    case UserActionTypes.REGISTER_FAIL:
-    // case UserActionTypes.AUTH_ERROR:
-    case UserActionTypes.LOGIN_FAIL:
-    case UserActionTypes.LOGOUT:
-      localStorage.removeItem('token');
-      return {
-        ...state,
-        token: null,
-        isAuthenticated: false,
-        loading: false,
-        currentUser: null,
-        error: action.payload,
-      };
-    case UserActionTypes.AUTH_ERROR:
-      localStorage.removeItem('token');
-      return {
-        ...state,
-        token: null,
-        isAuthenticated: false,
-        loading: false,
-        currentUser: null,
-      };
-    case UserActionTypes.CLEAR_ERRORS:
-      localStorage.removeItem('token');
-      return {
-        ...state,
-        error: null,
-      };
+    case USER_LOGIN_REQUEST:
+      return { loading: true };
+    case USER_LOGIN_SUCCESS:
+      return { loading: false, userInfo: action.payload };
+    case USER_LOGIN_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_LOGOUT:
+      return {};
     default:
       return state;
   }
 };
 
-export default userReducer;
+export const userRegisterReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_REGISTER_REQUEST:
+      return { loading: true };
+    case USER_REGISTER_SUCCESS:
+      return { loading: false, userInfo: action.payload };
+    case USER_REGISTER_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_LOGOUT:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userDetailsReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USER_DETAILS_REQUEST:
+      return { ...state, loading: true };
+    case USER_DETAILS_SUCCESS:
+      return { loading: false, user: action.payload };
+    case USER_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_DETAILS_RESET:
+      return { user: {} };
+    default:
+      return state;
+  }
+};

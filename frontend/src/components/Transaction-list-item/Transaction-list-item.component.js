@@ -6,8 +6,8 @@ import {
   selectMoneyTransactions,
   selectFilteredTransaction,
   selectLoadingTransaction,
-} from '../../redux/money/money.selectors';
-import { getTransactions } from '../../redux/money/money.actions';
+} from '../../redux/transaction/transactions.selectors';
+import { getTransactions } from '../../redux/transaction/transactions.actions';
 import TransactionItem from '../Transaction-item/Transaction-item.component';
 
 import './Transaction-list-item.styles.scss';

@@ -17,7 +17,7 @@ const About = () => {
           <div className='developer'>Phone-Number :</div>
           <div className='name'>+989196891321</div>
         </div>
-        <div className='version'>version : 1.0.0</div>
+        <div className='version'>version : 2.0.0</div>
       </div>
     </div>
   );

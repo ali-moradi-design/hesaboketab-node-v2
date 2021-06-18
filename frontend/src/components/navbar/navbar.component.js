@@ -1,23 +1,19 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { selectUserAuthenticated } from '../../redux/user/user.selectors';
+import Snack from '../snackbar/Snack';
 import { logout } from '../../redux/user/user.actions';
-import { clearTransactions } from '../../redux/money/money.actions';
 import './navbar.styles.scss';
 
-const Navbar = ({
-  title,
-  icon,
-  isAuthenticated,
-  logout,
-  clearTransactions,
-}) => {
+const Navbar = ({ title, icon }) => {
+  const dispatch = useDispatch();
+
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user, error } = userDetails;
+
   const onLogout = () => {
-    logout();
-    clearTransactions();
+    dispatch(logout());
   };
 
   const authLinks = (
@@ -43,35 +39,23 @@ const Navbar = ({
         <Link to='/register'>ثبت نام</Link>
       </li>
       <li>
-        <Link to='/login'>ورود</Link>
+        <Link to='/'>ورود</Link>
       </li>
     </Fragment>
   );
 
   return (
     <div className='navbar'>
+      {error && <Snack error={error} />}
       <div className='navbar-inside'>
+        <ul className='list-item'>
+          {user && Object.keys(user).length !== 0 ? authLinks : guestLinks}
+        </ul>
         <h1>
           <Link to='/'>
             <i className={icon} /> {title}
           </Link>
         </h1>
-        <ul className='list-item'>
-          {isAuthenticated ? authLinks : guestLinks}
-
-          {/* <li className='item'>
-          <Link to='/'>صفحه اصلی</Link>
-        </li>
-        <li>
-          <Link to='/about'>درباره ما</Link>
-        </li>
-        <li>
-          <Link to='/register'>ثبت نام</Link>
-        </li>
-        <li>
-          <Link to='/login'>ورود</Link>
-        </li> */}
-        </ul>
       </div>
     </div>
   );
@@ -87,17 +71,4 @@ Navbar.defaultProps = {
   icon: 'fas fa-calculator',
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  logout: () => {
-    dispatch(logout());
-  },
-  clearTransactions: () => {
-    dispatch(clearTransactions());
-  },
-});
-
-const mapStateToProps = createStructuredSelector({
-  isAuthenticated: selectUserAuthenticated,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default Navbar;

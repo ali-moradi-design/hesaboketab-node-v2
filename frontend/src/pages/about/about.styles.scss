@@ -1,4 +1,5 @@
 .about-container {
+  direction: ltr;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -22,8 +23,8 @@
     margin-bottom: 1.5rem;
   }
   .version {
-    background: #000;
-    color: #fff;
+    background: linear-gradient(196deg, #ffd89b 0%, #790946 35%, #ffd89b 100%);
+    color: #000;
     border-radius: 5px;
     margin-top: 5rem;
     padding: 0.5rem 1rem;

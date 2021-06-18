@@ -1,100 +1,135 @@
-import { UserActionTypes } from './user.types';
 import axios from 'axios';
-import setAuthToken from './user.utils';
+import {
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
+  USER_DETAILS_RESET,
+  USER_LOGIN_FAIL,
+  USER_LOGIN_REQUEST,
+  USER_LOGIN_SUCCESS,
+  USER_LOGOUT,
+  USER_REGISTER_FAIL,
+  USER_REGISTER_REQUEST,
+  USER_REGISTER_SUCCESS,
+  CLEAR_ERRORS,
+} from './user.types';
 
-export const loadingUser = () => async (dispatch) => {
-  setAuthToken(localStorage.token);
-
+export const getUserDetails = () => async (dispatch, getState) => {
   try {
-    const res = await axios.get('/api/v1/auth/me');
+    dispatch({
+      type: USER_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'x-auth-token': userInfo.token,
+      },
+    };
+
+    const { data } = await axios.get(`/api/v1/auth/me`, config);
 
     dispatch({
-      type: UserActionTypes.USER_LOADED,
-      payload: res.data.data,
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
     });
-  } catch (err) {
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
-      type: UserActionTypes.AUTH_ERROR,
+      type: USER_DETAILS_FAIL,
+      payload: message,
     });
   }
 };
 
 export const register = (formData) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
   try {
-    const res = await axios.post('/api/v1/auth/register', formData, config);
-
     dispatch({
-      type: UserActionTypes.REGISTER_SUCCESS,
-      payload: res.data,
+      type: USER_REGISTER_REQUEST,
     });
-    if (localStorage.token) {
-      setAuthToken(localStorage.token);
-    }
 
-    try {
-      const res2 = await axios.get('/api/v1/auth/me');
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
-      dispatch({
-        type: UserActionTypes.USER_LOADED,
-        payload: res2.data.data,
-      });
-    } catch (err) {
-      dispatch({
-        type: UserActionTypes.AUTH_ERROR,
-      });
-    }
-  } catch (err) {
+    const { data } = await axios.post(
+      '/api/v1/auth/register',
+      formData,
+      config
+    );
+
     dispatch({
-      type: UserActionTypes.REGISTER_FAIL,
-      payload: err.response.data.error,
+      type: USER_REGISTER_SUCCESS,
+      payload: data,
+    });
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+
+    localStorage.setItem('userInfo', JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_REGISTER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };
+
 export const login = (formData) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
   try {
-    const res = await axios.post('api/v1/auth/login', formData, config);
-
     dispatch({
-      type: UserActionTypes.LOGIN_SUCCESS,
-      payload: res.data,
+      type: USER_LOGIN_REQUEST,
     });
-    if (localStorage.token) {
-      setAuthToken(localStorage.token);
-    }
 
-    try {
-      const res2 = await axios.get('/api/v1/auth/me');
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
-      dispatch({
-        type: UserActionTypes.USER_LOADED,
-        payload: res2.data.data,
-      });
-    } catch (err) {
-      dispatch({
-        type: UserActionTypes.AUTH_ERROR,
-      });
-    }
-  } catch (err) {
+    const { data } = await axios.post('/api/v1/auth/login', formData, config);
+
     dispatch({
-      type: UserActionTypes.LOGIN_FAIL,
-      payload: err.response.data.error,
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+
+    localStorage.setItem('userInfo', JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_LOGIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };
 
-export const logout = () => ({
-  type: UserActionTypes.LOGOUT,
-});
+export const logout = () => (dispatch) => {
+  localStorage.removeItem('userInfo');
+  dispatch({ type: USER_LOGOUT });
+  dispatch({ type: USER_DETAILS_RESET });
+
+  document.location.href = '/';
+};
+
 export const clearErrors = () => ({
-  type: UserActionTypes.CLEAR_ERRORS,
+  type: CLEAR_ERRORS,
 });
