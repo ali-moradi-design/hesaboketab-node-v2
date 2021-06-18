@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +11,7 @@ import { getTransactions } from '../../redux/transaction/transactions.actions';
 
 const useStyles = makeStyles((theme) => ({
   revelotionCard: {
-    width: '70rem',
+    width: '100%',
     padding: '1rem',
     [theme.breakpoints.down('md')]: {
       marginTop: '1rem',
@@ -38,28 +38,33 @@ const DisplayTransactionValues = () => {
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
+  const [total, setTotal] = useState(0);
+  const [income, setIncome] = useState(0);
+  const [expence, setExpence] = useState(0);
 
   const dispatch = useDispatch();
 
   const transactionList = useSelector((state) => state.transactionList);
   const { transactions, loading, error } = transactionList;
+  console.log(transactions.data);
 
-  let total, income, expence;
   if (transactions && transactions.length > 0 && transactions.data.length > 0) {
-    total = transactions.data.reduce(
-      (acc, transaction) => acc + transaction.amount,
-      0
+    setTotal(
+      transactions.data.reduce(
+        (acc, transaction) => acc + transaction.amount,
+        0
+      )
     );
-    income = transactions.data
-      .filter((transaction) => transaction.amount > 0)
-      .reduce((acc, transaction) => acc + transaction.amount, 0);
-    expence = transactions.data
-      .filter((transaction) => transaction.amount < 0)
-      .reduce((acc, transaction) => acc + transaction.amount, 0);
-  } else {
-    total = 0;
-    income = 0;
-    expence = 0;
+    setIncome(
+      transactions.data
+        .filter((transaction) => transaction.amount > 0)
+        .reduce((acc, transaction) => acc + transaction.amount, 0)
+    );
+    setExpence(
+      transactions.data
+        .filter((transaction) => transaction.amount < 0)
+        .reduce((acc, transaction) => acc + transaction.amount, 0)
+    );
   }
 
   useEffect(() => {
@@ -74,8 +79,8 @@ const DisplayTransactionValues = () => {
   };
 
   return (
-    <Grid container justify='center'>
-      <Grid item>
+    <Grid container>
+      <Grid item sm={12}>
         <Card className={classes.revelotionCard} elevation={5}>
           <Grid container justify='space-between'>
             <Grid item sm={4}>

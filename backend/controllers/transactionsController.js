@@ -1,7 +1,6 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Transaction = require('../models/TransactionModel');
-const { resetPassword } = require('./authController');
 
 // @desc      Get all transactions
 // @route     GET /api/v1/transactions
@@ -54,6 +53,8 @@ exports.createTransaction = asyncHandler(async (req, res, next) => {
     item: req.body.item,
     description: req.body.description,
     amount: Number(req.body.amount),
+    necessary: req.body.necessary,
+    happendAt: req.body.happendAt,
   };
 
   const transaction = await Transaction.create(newTransaction);
@@ -96,6 +97,8 @@ exports.updateTransaction = asyncHandler(async (req, res, next) => {
     item: req.body.item,
     description: req.body.description,
     amount: Number(req.body.amount),
+    necessary: req.body.necessary,
+    happendAt: req.body.happendAt,
   };
 
   transaction = await Transaction.findOneAndUpdate(

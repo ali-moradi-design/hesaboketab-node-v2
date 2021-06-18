@@ -116,6 +116,15 @@ export default createMuiTheme({
         color: arcOrange,
         fontSize: '1rem',
       },
+      formControl: {
+        left: undefined,
+        right: 0,
+        transform: 'translate(0, 24px) scale(1)',
+      },
+      shrink: {
+        transform: 'translate(0, -1.5px) scale(0.75)',
+        transformOrigin: ' top right',
+      },
     },
     MuiAccordionSummary: {
       content: {

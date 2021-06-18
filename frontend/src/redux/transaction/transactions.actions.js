@@ -91,6 +91,7 @@ export const deleteTransaction = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         'x-auth-token': userInfo.token,
       },
     };
@@ -115,42 +116,48 @@ export const deleteTransaction = (id) => async (dispatch, getState) => {
   }
 };
 
-export const createTransaction = () => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: TRANSACTION_CREATE_REQUEST,
-    });
+export const createTransaction =
+  (transaction) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: TRANSACTION_CREATE_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        'x-auth-token': userInfo.token,
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': userInfo.token,
+        },
+      };
 
-    const { data } = await axios.post(`/api/transactions`, {}, config);
+      const { data } = await axios.post(
+        `/api/v1/transactions`,
+        transaction,
+        config
+      );
 
-    dispatch({
-      type: TRANSACTION_CREATE_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
+      dispatch({
+        type: TRANSACTION_CREATE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === 'Not authorized, token failed') {
+        dispatch(logout());
+      }
+      dispatch({
+        type: TRANSACTION_CREATE_FAIL,
+        payload: message,
+      });
     }
-    dispatch({
-      type: TRANSACTION_CREATE_FAIL,
-      payload: message,
-    });
-  }
-};
+  };
 
 export const updateTransaction =
   (transaction) => async (dispatch, getState) => {
@@ -166,7 +173,7 @@ export const updateTransaction =
       const config = {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${userInfo.token}`,
+          'x-auth-token': userInfo.token,
         },
       };
 

@@ -28,7 +28,7 @@ export const transactionListReducer = (
     case TRANSACTION_LIST_SUCCESS:
       return {
         loading: false,
-        transactions: action.payload.transactions,
+        transactions: action.payload,
       };
     case TRANSACTION_LIST_FAIL:
       return { loading: false, error: action.payload };
