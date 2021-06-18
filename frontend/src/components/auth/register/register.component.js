@@ -56,7 +56,7 @@ const Register = ({
     }
   };
   return (
-    <div className='container'>
+    <div className='container-reg'>
       <div className='container-form'>
         <form id='form' className='form' onSubmit={onSubmit}>
           <h2>فرم ثبت نام</h2>

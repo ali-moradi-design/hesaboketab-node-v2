@@ -1,5 +1,7 @@
 import React from 'react';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { Switch, Route } from 'react-router-dom';
+import theme from './components/theme';
 import Navbar from './components/navbar/navbar.component';
 import HomePage from './pages/hompage/hompage.component';
 import About from './pages/about/about.component';
@@ -14,7 +16,7 @@ if (localStorage.token) {
 }
 
 const App = () => (
-  <div>
+  <ThemeProvider theme={theme}>
     <Navbar />
     <Alert />
     <Switch>
@@ -23,7 +25,7 @@ const App = () => (
       <Route exact path='/register' component={Register} />
       <Route exact path='/login' component={Login} />
     </Switch>
-  </div>
+  </ThemeProvider>
 );
 
 export default App;

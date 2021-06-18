@@ -1,6 +1,40 @@
 @font-face {
-  font-family: 'Vazir';
-  src: url('./assets/Vazir.ttf') format('truetype');
+  font-family: 'Yekan Bakh';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'Yekan Bakh';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'Yekan Bakh Hairline';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Yekan Bakh Heavy';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Yekan Bakh Fat';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Yekan Bakh Thin';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Yekan Bakh Light';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Yekan Bakh Medium';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Yekan Bakh Medium';
+  src: url('./assets/fonts/Yekan-Bakh-Fa-En-04-Regular.ttf') format('truetype');
 }
 
 *,
@@ -29,9 +63,9 @@ body {
   font-size: 62.5%;
   overflow: scroll;
   overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Vazir', 'Segoe UI', 'Roboto',
-    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Baloo Tammudu 2',
+    'Yekan Bakh', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

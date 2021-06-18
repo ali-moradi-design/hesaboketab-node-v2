@@ -1,13 +1,22 @@
-import { createStore, applyMiddleware } from 'redux';
-import { persistStore } from 'redux-persist';
-import logger from 'redux-logger';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-import rootReducer from './root-reducer';
+import moneyReducer from './money/money.reducer';
+import userReducer from './user/user.reducer';
+import alertReducer from './alert/alert.reducer';
 
-const middlewares = [thunk, logger];
+const rootReducer = combineReducers({
+  money: moneyReducer,
+  user: userReducer,
+  alert: alertReducer,
+});
 
-export const store = createStore(rootReducer, applyMiddleware(...middlewares));
-export const persistor = persistStore(store);
+const middleware = [thunk];
 
-export default { store, persistor };
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(...middleware))
+);
+
+export default store;
