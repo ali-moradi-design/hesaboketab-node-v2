@@ -21,6 +21,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { format } from 'date-fns';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { getTransactions } from '../../redux/transaction/transactions.actions';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -56,7 +57,11 @@ const TransactionFilter = () => {
   const transactionCreate = useSelector((state) => state.transactionCreate);
   const { loading, success, transaction, error } = transactionCreate;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (success) {
+      dispatch(getTransactions);
+    }
+  }, [dispatch, success]);
 
   const addProject = () => {
     let finalAmount;

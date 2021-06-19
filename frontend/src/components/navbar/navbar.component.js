@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 import Snack from '../snackbar/Snack';
 import { logout } from '../../redux/user/user.actions';
 import './navbar.styles.scss';
@@ -9,8 +10,8 @@ import './navbar.styles.scss';
 const Navbar = ({ title, icon }) => {
   const dispatch = useDispatch();
 
-  const userDetails = useSelector((state) => state.userDetails);
-  const { user, error } = userDetails;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo, error } = userLogin;
 
   const onLogout = () => {
     dispatch(logout());
@@ -19,10 +20,10 @@ const Navbar = ({ title, icon }) => {
   const authLinks = (
     <Fragment>
       <li>
-        <a onClick={onLogout} href='#!'>
+        <Button style={{ color: ' #fff' }} onClick={onLogout}>
           <i className='fas fa-sign-out-alt'></i>{' '}
           <span className='hide'>خروج</span>
-        </a>
+        </Button>
       </li>
     </Fragment>
   );
@@ -49,7 +50,9 @@ const Navbar = ({ title, icon }) => {
       {error && <Snack error={error} />}
       <div className='navbar-inside'>
         <ul className='list-item'>
-          {user && Object.keys(user).length !== 0 ? authLinks : guestLinks}
+          {userInfo && Object.keys(userInfo).length !== 0
+            ? authLinks
+            : guestLinks}
         </ul>
         <h1>
           <Link to='/'>

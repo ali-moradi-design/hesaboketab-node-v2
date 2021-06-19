@@ -111,6 +111,58 @@ export default createMuiTheme({
     },
   },
   overrides: {
+    MuiTableCell: {
+      head: {
+        fontFamily: 'Yekan Bakh',
+        fontSize: '1rem',
+        fontWeight: 700,
+        color: arcRed,
+        borderColor: arcRed,
+        borderWidth: 3,
+        textAlign: 'center',
+      },
+      body: {
+        fontFamily: 'Yekan Bakh',
+        color: arcGrey,
+        borderColor: arcOrange,
+        borderWidth: 2,
+        textAlign: 'center',
+      },
+    },
+    MuiChip: {
+      deleteIcon: {
+        margin: '0 5px 0 10px',
+      },
+      label: {
+        fontFamily: 'Yekan Bakh',
+      },
+    },
+    MuiTablePagination: {
+      caption: {
+        fontFamily: 'Yekan Bakh',
+        direction: 'ltr',
+      },
+    },
+    MuiTableSortLabel: {
+      root: {
+        '&:hover': {
+          color: arcOrange,
+        },
+        '&.MuiTableSortLabel-active': {
+          color: arcOrange,
+        },
+      },
+      icon: {
+        fill: arcOrange,
+      },
+    },
+    MuiSvgIcon: {
+      root: {
+        '&.MuiSelect-icon': {
+          fill: arcOrange,
+        },
+      },
+    },
     MuiInputLabel: {
       root: {
         color: arcOrange,

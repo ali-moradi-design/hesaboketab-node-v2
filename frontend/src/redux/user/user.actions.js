@@ -11,7 +11,6 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
-  CLEAR_ERRORS,
 } from './user.types';
 
 export const getUserDetails = () => async (dispatch, getState) => {
@@ -129,7 +128,3 @@ export const logout = () => (dispatch) => {
 
   document.location.href = '/';
 };
-
-export const clearErrors = () => ({
-  type: CLEAR_ERRORS,
-});

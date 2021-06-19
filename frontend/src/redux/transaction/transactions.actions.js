@@ -35,7 +35,7 @@ export const getTransactions = () => async (dispatch, getState) => {
 
     dispatch({
       type: TRANSACTION_LIST_SUCCESS,
-      payload: data,
+      payload: data.data,
     });
   } catch (error) {
     dispatch({
