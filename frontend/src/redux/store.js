@@ -10,6 +10,7 @@ import {
 
 import {
   transactionListReducer,
+  transactionFilterdListReducer,
   transactionDetailsReducer,
   transactionDeleteReducer,
   transactionCreateReducer,
@@ -18,6 +19,7 @@ import {
 
 const rootReducer = combineReducers({
   transactionList: transactionListReducer,
+  transactionFilterdList: transactionFilterdListReducer,
   transactionDetails: transactionDetailsReducer,
   transactionDelete: transactionDeleteReducer,
   transactionCreate: transactionCreateReducer,

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,23 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import Snackbar from '@material-ui/core/Snackbar';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Chip from '@material-ui/core/Chip';
-import Grid from '@material-ui/core/Grid';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -66,15 +49,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -82,14 +57,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -116,268 +83,6 @@ function EnhancedTableHead(props) {
   );
 }
 
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(2),
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: '1 1 100%',
-  },
-  menu: {
-    '&:hover': {
-      backgroundColor: '#fff',
-    },
-    '&.Mui-focusVisible': {
-      backgroundColor: '#fff',
-    },
-  },
-  totalFilter: {
-    fontSize: '2rem',
-    color: theme.palette.common.orange,
-  },
-  dollarSign: {
-    fontSize: '1.5rem',
-    color: theme.palette.common.orange,
-  },
-}));
-
-const EnhancedTableToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { numSelected } = props;
-  const [undo, setUndo] = React.useState([]);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [openMenu, setOpenMenu] = React.useState(false);
-
-  const [alert, setAlert] = React.useState({
-    open: false,
-    color: '#530624',
-    message: 'Row deleted!',
-  });
-
-  const handleClick = (e) => {
-    setAnchorEl(e.currentTarget);
-    setOpenMenu(true);
-  };
-
-  const handleClose = (e) => {
-    setAnchorEl(null);
-    setOpenMenu(false);
-  };
-
-  const onDelete = () => {
-    const newRows = [...props.rows];
-    const selectedRows = newRows.filter((row) =>
-      props.selected.includes(row.name)
-    );
-    selectedRows.map((row) => (row.search = false));
-    props.setRows(newRows);
-
-    setUndo(selectedRows);
-    props.setSelected([]);
-    setAlert({ ...alert, open: true });
-  };
-  const onEdit = () => {
-    console.log('edit');
-  };
-
-  const onUndo = () => {
-    setAlert({ ...alert, open: false });
-    const newRows = [...props.rows];
-    const redo = [...undo];
-    redo.map((row) => (row.search = true));
-    Array.prototype.push.apply(newRows, ...redo);
-    props.setRows(newRows);
-  };
-
-  const handleTotalFilter = (event) => {
-    props.setFilterPrice(event.target.value);
-
-    if (event.target.value !== '') {
-      const newRows = [...props.rows];
-
-      if (props.totalFilter === '>') {
-        newRows.filter((row) => row.amount > event.target.value);
-      } else if (props.totalFilter === '=') {
-        newRows.filter((row) => row.amount === event.target.value);
-      } else {
-        newRows.filter((row) => row.amount < event.target.value);
-      }
-      props.setRows(newRows);
-    } else {
-      const newRows = [...props.rows];
-      props.setRows(newRows);
-    }
-  };
-
-  const filterChange = (operator) => {
-    if (props.filterPrice !== '') {
-      const newRows = [...props.rows];
-
-      if (operator === '>') {
-        newRows.filter((row) => row.amount > props.filterPrice);
-      } else if (operator === '=') {
-        newRows.filter((row) => row.amount === props.filterPrice);
-      } else {
-        newRows.filter((row) => row.amount < props.filterPrice);
-      }
-      props.setRows(newRows);
-    }
-  };
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color='inherit'
-          variant='subtitle1'
-        >
-          {numSelected} آیتم انتخاب شده
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          color='inherit'
-          variant='subtitle1'
-        >
-          {null}
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <>
-          <Tooltip title='ویرایش'>
-            <IconButton
-              style={{ marginLeft: '1rem' }}
-              aria-label='edit'
-              onClick={onEdit}
-            >
-              <EditIcon
-                style={{ fontSize: 30, color: '#000' }}
-                color='inherit'
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title='حذف'>
-            <IconButton aria-label='delete' onClick={onDelete}>
-              <DeleteIcon style={{ fontSize: 30 }} color='primary' />
-            </IconButton>
-          </Tooltip>
-        </>
-      ) : (
-        <Tooltip title='Filter list'>
-          <IconButton aria-label='filter list' onClick={handleClick}>
-            <FilterListIcon style={{ fontSize: 50 }} color='secondary' />
-          </IconButton>
-        </Tooltip>
-      )}
-      <Snackbar
-        open={alert.open}
-        ContentProps={{
-          style: {
-            backgroundColor: alert.color,
-          },
-        }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        message={alert.message}
-        onClose={(event, reason) => {
-          if (reason === 'clickaway') {
-            setAlert({ ...alert, open: false });
-            const newRows = [...props.rows];
-            const names = [...undo.map((row) => row.item)];
-            props.setRows(newRows.filter((row) => !names.includes(row.item)));
-          }
-        }}
-        action={
-          <Button onClick={onUndo} style={{ color: '#fff' }}>
-            Undo
-          </Button>
-        }
-      />
-      <Menu
-        id='simple-menu'
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleClose}
-        elevation={2}
-        style={{ zIndex: 1302 }}
-        keepMounted
-      >
-        <MenuItem classes={{ root: classes.menu }}>
-          <TextField
-            value={props.filterPrice}
-            onChange={handleTotalFilter}
-            placeholder='برای فیلتر مقداری وارد کنید'
-            InputProps={{
-              type: 'number',
-              startAdornment: (
-                <InputAdornment position='end'>
-                  <span className={classes.dollarSign}>$</span>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  onClick={() => {
-                    props.setTotalFilter(
-                      props.totalFilter === '>'
-                        ? '<'
-                        : props.totalFilter === '<'
-                        ? '='
-                        : '>'
-                    );
-                    filterChange(
-                      props.totalFilter === '>'
-                        ? '<'
-                        : props.totalFilter === '<'
-                        ? '='
-                        : '>'
-                    );
-                  }}
-                  position='start'
-                  style={{ cursor: 'pointer' }}
-                >
-                  <span className={classes.totalFilter}>
-                    {props.totalFilter}
-                  </span>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </MenuItem>
-      </Menu>
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -400,35 +105,19 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  chip: {
-    marginRight: '2em',
-    backgroundColor: theme.palette.common.blue,
-    color: '#fff',
-  },
 }));
 
 export default function EnhancedTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('name');
+  const [orderBy, setOrderBy] = React.useState('item');
   const [selected, setSelected] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [filterPrice, setFilterPrice] = React.useState('');
-  const [totalFilter, setTotalFilter] = React.useState('>');
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = props.rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleClick = (event, item) => {
@@ -467,36 +156,12 @@ export default function EnhancedTable(props) {
   };
 
   const priceFilters = (switchRows) => {
-    if (filterPrice !== '') {
-      const newRows = [...switchRows];
-      if (totalFilter === '>') {
-        newRows.filter((row) => row.amount > filterPrice);
-      } else if (totalFilter === '=') {
-        newRows.filter((row) => row.amount === filterPrice);
-      } else {
-        newRows.filter((row) => row.amount < filterPrice);
-      }
-
-      return newRows;
-    } else {
-      return switchRows;
-    }
+    return switchRows;
   };
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar
-          rows={props.rows}
-          setRows={props.setRows}
-          selected={selected}
-          setSelected={setSelected}
-          numSelected={selected.length}
-          filterPrice={filterPrice}
-          setFilterPrice={setFilterPrice}
-          totalFilter={totalFilter}
-          setTotalFilter={setTotalFilter}
-        />
         <TableContainer>
           <Table
             className={classes.table}
@@ -506,12 +171,9 @@ export default function EnhancedTable(props) {
           >
             <EnhancedTableHead
               classes={classes}
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={props.rows.length}
             />
             <TableBody>
               {stableSort(
@@ -529,26 +191,13 @@ export default function EnhancedTable(props) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.item)}
                       role='checkbox'
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row._id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        align='center'
-                        component='th'
-                        id={labelId}
-                        scope='row'
-                        padding='none'
-                      >
+                      <TableCell align='center' id={labelId} scope='row'>
                         {row.item}
                       </TableCell>
                       <TableCell dir='ltr' align='center'>
@@ -580,33 +229,12 @@ export default function EnhancedTable(props) {
           labelRowsPerPage='تعداد ردیف در هر صفحه'
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={priceFilters(switchFilters()).length}
+          count={props.rows.length}
           rowsPerPage={rowsPerPage}
           page={props.page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
-        <Grid container justify='flex-start' style={{ paddingBottom: '1rem' }}>
-          <Grid item>
-            {filterPrice !== '' ? (
-              <Chip
-                onDelete={() => {
-                  setFilterPrice('');
-                  const newRows = [...props.rows];
-                  props.setRows(newRows);
-                }}
-                className={classes.chip}
-                label={
-                  totalFilter === '>'
-                    ? `کوچکتر از ${filterPrice}`
-                    : totalFilter === '<'
-                    ? ` بزرگتر از ${filterPrice}`
-                    : ` مساوی با ${filterPrice}`
-                }
-              />
-            ) : null}
-          </Grid>
-        </Grid>
       </Paper>
     </div>
   );

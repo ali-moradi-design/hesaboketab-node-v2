@@ -3,6 +3,8 @@ import {
   TRANSACTION_LIST_REQUEST,
   TRANSACTION_LIST_SUCCESS,
   TRANSACTION_LIST_FAIL,
+  TRANSACTION_LIST_FILTERED_REQUEST,
+  TRANSACTION_LIST_FILTERED_SUCCESS,
   TRANSACTION_DETAILS_REQUEST,
   TRANSACTION_DETAILS_SUCCESS,
   TRANSACTION_DETAILS_FAIL,
@@ -33,9 +35,11 @@ export const getTransactions = () => async (dispatch, getState) => {
 
     const { data } = await axios.get('/api/v1/transactions', config);
 
+    const transactions = data.data;
+
     dispatch({
       type: TRANSACTION_LIST_SUCCESS,
-      payload: data.data,
+      payload: transactions,
     });
   } catch (error) {
     dispatch({
@@ -47,6 +51,23 @@ export const getTransactions = () => async (dispatch, getState) => {
     });
   }
 };
+export const getFilteredTransactions =
+  (input) => async (dispatch, getState) => {
+    dispatch({ type: TRANSACTION_LIST_FILTERED_REQUEST });
+
+    const {
+      transactionList: { transactions },
+    } = getState();
+
+    const transactionsFilterd = transactions.filter((el) =>
+      el.item.toLowerCase().includes(input.toLowerCase())
+    );
+
+    dispatch({
+      type: TRANSACTION_LIST_FILTERED_SUCCESS,
+      payload: transactionsFilterd,
+    });
+  };
 
 export const listTransactionDetails = (id) => async (dispatch, getState) => {
   try {
@@ -66,7 +87,7 @@ export const listTransactionDetails = (id) => async (dispatch, getState) => {
 
     dispatch({
       type: TRANSACTION_DETAILS_SUCCESS,
-      payload: data,
+      payload: data.data,
     });
   } catch (error) {
     dispatch({

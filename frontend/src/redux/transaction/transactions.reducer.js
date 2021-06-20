@@ -2,9 +2,12 @@ import {
   TRANSACTION_LIST_REQUEST,
   TRANSACTION_LIST_SUCCESS,
   TRANSACTION_LIST_FAIL,
+  TRANSACTION_LIST_FILTERED_REQUEST,
+  TRANSACTION_LIST_FILTERED_SUCCESS,
   TRANSACTION_DETAILS_REQUEST,
   TRANSACTION_DETAILS_SUCCESS,
   TRANSACTION_DETAILS_FAIL,
+  TRANSACTION_DETAILS_RESET,
   TRANSACTION_DELETE_REQUEST,
   TRANSACTION_DELETE_SUCCESS,
   TRANSACTION_DELETE_FAIL,
@@ -29,9 +32,35 @@ export const transactionListReducer = (
       return {
         loading: false,
         transactions: action.payload,
+        total: action.payload.reduce(
+          (acc, transaction) => acc + transaction.amount,
+          0
+        ),
+        income: action.payload
+          .filter((transaction) => transaction.amount > 0)
+          .reduce((acc, transaction) => acc + transaction.amount, 0),
+        expence: action.payload
+          .filter((transaction) => transaction.amount < 0)
+          .reduce((acc, transaction) => acc + transaction.amount, 0),
       };
     case TRANSACTION_LIST_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const transactionFilterdListReducer = (
+  state = { transactionsFilterd: [] },
+  action
+) => {
+  switch (action.type) {
+    case TRANSACTION_LIST_FILTERED_REQUEST:
+      return { transactionsFilterd: [] };
+    case TRANSACTION_LIST_FILTERED_SUCCESS:
+      return {
+        transactionsFilterd: action.payload,
+      };
     default:
       return state;
   }
@@ -48,6 +77,8 @@ export const transactionDetailsReducer = (
       return { loading: false, transaction: action.payload };
     case TRANSACTION_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+    case TRANSACTION_DETAILS_RESET:
+      return { transaction: {} };
     default:
       return state;
   }
