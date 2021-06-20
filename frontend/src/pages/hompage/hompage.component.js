@@ -41,7 +41,6 @@ import {
   listTransactionDetails,
   updateTransaction,
   getFilteredTransactions,
-  clearTransaction,
 } from '../../redux/transaction/transactions.actions';
 import {
   TRANSACTION_UPDATE_RESET,
@@ -159,6 +158,7 @@ const Hompage = ({ history }) => {
 
   const kind = ['درآمد', 'هزینه'];
   const [type, setType] = useState('');
+  const [currentId, setCurrentId] = useState('');
   const [typeUpdate, setTypeUpdate] = useState('');
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('item');
@@ -211,15 +211,22 @@ const Hompage = ({ history }) => {
     dispatch(getFilteredTransactions(event.target.value));
   };
 
-  const handleEditStepOne = (id) => {
-    dispatch({ type: TRANSACTION_DETAILS_RESET });
-    dispatch(listTransactionDetails(id));
+  const handleEditStepOne = (id, i, a, d, n, h) => {
+    setCurrentId(id);
+    setItemUpdate(i);
+    setHappendAtUpdate(h);
+    setAmountUpdate(Number(a));
+    setDescriptionUpdate(d);
+    setNecessaryUpdate(n);
+    if (Number(a) > 0) {
+      setTypeUpdate('درآمد');
+    } else {
+      setTypeUpdate('هزینه');
+    }
     setDialogOpenItemDetail(true);
-    console.log(transaction._id);
   };
 
   const handleEditStepTwo = () => {
-    console.log(transaction._id);
     let finalAmount;
     if (type === 'هزینه') {
       finalAmount = amountUpdate * -1;
@@ -227,24 +234,24 @@ const Hompage = ({ history }) => {
       finalAmount = amountUpdate;
     }
     const updatedTransaction = {
-      _id: transaction._id,
+      _id: currentId,
       item: itemUpdate,
       amount: finalAmount,
       description: descriptionUpdate,
       happendAt: happendAtUpdate,
       necessary: necessaryUpdate,
     };
-
-    dispatch(updateTransaction(updatedTransaction));
-
-    setDialogOpenItemDetail(false);
-
+    dispatch({ type: TRANSACTION_DETAILS_RESET });
+    setCurrentId('');
     setItemUpdate('');
     setHappendAtUpdate(new Date());
     setAmountUpdate(0);
     setTypeUpdate('');
     setDescriptionUpdate('');
     setNecessaryUpdate(false);
+    dispatch(updateTransaction(updatedTransaction));
+
+    setDialogOpenItemDetail(false);
   };
 
   const handleDelete = (id) => {
@@ -309,30 +316,22 @@ const Hompage = ({ history }) => {
     if (!userInfo) {
       history.push('/');
     }
-    if (transaction) {
-      setItemUpdate(transaction.item);
-      setAmountUpdate(transaction.amount);
-      setHappendAtUpdate(transaction.happendAt);
-      setNecessaryUpdate(transaction.necessary);
-      setDescriptionUpdate(transaction.description);
-      if (transaction.amount > 0) {
-        setTypeUpdate('درآمد');
-      } else {
-        setTypeUpdate('هزینه');
-      }
-      dispatch({ type: TRANSACTION_UPDATE_RESET });
-    }
+    // if (transaction) {
+    //   setItemUpdate(transaction.item);
+    //   setAmountUpdate(transaction.amount);
+    //   setHappendAtUpdate(transaction.happendAt);
+    //   setNecessaryUpdate(transaction.necessary);
+    //   setDescriptionUpdate(transaction.description);
+    //   if (transaction.amount > 0) {
+    //     setTypeUpdate('درآمد');
+    //   } else {
+    //     setTypeUpdate('هزینه');
+    //   }
+    //   dispatch({ type: TRANSACTION_UPDATE_RESET });
+    // }
 
     dispatch(getTransactions());
-  }, [
-    dispatch,
-    history,
-    userInfo,
-    success,
-    successDelete,
-    transaction,
-    successUpdate,
-  ]);
+  }, [dispatch, history, userInfo, success, successDelete, successUpdate]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -779,7 +778,16 @@ const Hompage = ({ history }) => {
                               <TableCell align='center'>{row._id}</TableCell>
                               <TableCell align='center'>
                                 <Button
-                                  onClick={() => handleEditStepOne(row._id)}
+                                  onClick={() =>
+                                    handleEditStepOne(
+                                      row._id,
+                                      row.item,
+                                      row.amount,
+                                      row.description,
+                                      row.necessary,
+                                      row.happendAt
+                                    )
+                                  }
                                 >
                                   <EditIcon
                                     style={{ fontSize: 30 }}

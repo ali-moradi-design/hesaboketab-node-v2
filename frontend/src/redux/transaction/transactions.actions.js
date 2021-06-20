@@ -180,49 +180,48 @@ export const createTransaction =
     }
   };
 
-export const updateTransaction =
-  (transaction) => async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: TRANSACTION_UPDATE_REQUEST,
-      });
+export const updateTransaction = (item) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: TRANSACTION_UPDATE_REQUEST,
+    });
 
-      const {
-        userLogin: { userInfo },
-      } = getState();
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': userInfo.token,
-        },
-      };
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': userInfo.token,
+      },
+    };
 
-      const { data } = await axios.put(
-        `/api/v1/transactions/${transaction._id}`,
-        transaction,
-        config
-      );
+    const { data } = await axios.put(
+      `/api/v1/transactions/${item._id}`,
+      item,
+      config
+    );
 
-      dispatch({
-        type: TRANSACTION_UPDATE_SUCCESS,
-        payload: data,
-      });
-      dispatch({ type: TRANSACTION_DETAILS_SUCCESS, payload: data });
-    } catch (error) {
-      const message =
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message;
-      if (message === 'Not authorized, token failed') {
-        dispatch(logout());
-      }
-      dispatch({
-        type: TRANSACTION_UPDATE_FAIL,
-        payload: message,
-      });
+    dispatch({
+      type: TRANSACTION_UPDATE_SUCCESS,
+      payload: data,
+    });
+    // dispatch({ type: TRANSACTION_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
     }
-  };
+    dispatch({
+      type: TRANSACTION_UPDATE_FAIL,
+      payload: message,
+    });
+  }
+};
 
 // export const clearTransactions = () => ({
 //   type: MoneyActionTypes.CLEAR_ITEMS,

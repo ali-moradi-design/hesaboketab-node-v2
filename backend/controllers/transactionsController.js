@@ -92,6 +92,7 @@ exports.updateTransaction = asyncHandler(async (req, res, next) => {
       )
     );
   }
+
   const updatedTransaction = {
     user: req.user.id,
     item: req.body.item,
@@ -102,10 +103,10 @@ exports.updateTransaction = asyncHandler(async (req, res, next) => {
   };
 
   transaction = await Transaction.findOneAndUpdate(
-    req.params.id,
+    { _id: req.params.id },
     updatedTransaction,
     {
-      new: true,
+      new: false,
       runValidators: true,
     }
   );
