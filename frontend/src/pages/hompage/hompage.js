@@ -336,11 +336,20 @@ const Hompage = ({ history }) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Container style={{ marginTop: '6rem' }}>
-        <Grid container>
+        <Grid container justify={matchesSM ? 'center' : undefined}>
           <Grid item sm={12}>
-            <Card className={classes.revelotionCard}>
-              <Grid container justify='space-between'>
-                <Grid item sm={4}>
+            <Card className={classes.revelotionCard} elevation={1}>
+              <Grid
+                container
+                direction={matchesSM ? 'column' : 'row'}
+                justify={matchesSM ? undefined : 'space-between'}
+                alignItems={matchesSM ? 'center' : undefined}
+              >
+                <Grid
+                  item
+                  md={4}
+                  style={{ margin: matchesMD ? '1rem 0' : '0' }}
+                >
                   <Grid container justify='center'>
                     <Grid item align='center'>
                       <Typography variant='h3' dir='ltr' align='center'>
@@ -349,38 +358,46 @@ const Hompage = ({ history }) => {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h3' dir='ltr'>
-                        {total ? numberWithCommas(total) : '0'}
+                      <Typography variant='h3'>
+                        {total ? `${numberWithCommas(total)} تومان` : `0`}{' '}
                       </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item sm={4}>
+                <Grid
+                  item
+                  md={4}
+                  style={{ margin: matchesMD ? '1rem 0' : '0' }}
+                >
                   <Grid container justify='center'>
                     <Grid item>
-                      <Typography variant='h3' dir='ltr'>
+                      <Typography variant='h4' dir='ltr'>
                         :درآمد
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h3'>
-                        {income ? `${numberWithCommas(income)} تومان` : '-'}
+                      <Typography variant='h4'>
+                        {income ? `${numberWithCommas(income)} تومان` : `0`}{' '}
                       </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item sm={4}>
+                <Grid
+                  item
+                  md={4}
+                  style={{ margin: matchesMD ? '1rem 0' : '0' }}
+                >
                   <Grid container justify='center'>
                     <Grid item>
-                      <Typography variant='h3' dir='ltr'>
+                      <Typography variant='h4' dir='ltr'>
                         :هزینه ها
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h3'>
+                      <Typography variant='h4'>
                         {expence
                           ? `${numberWithCommas(expence * -1)} تومان`
-                          : '-'}
+                          : `0`}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -389,7 +406,11 @@ const Hompage = ({ history }) => {
             </Card>
           </Grid>
         </Grid>
-        <Grid container style={{ marginTop: '2rem' }}>
+        <Grid
+          container
+          justify={matchesMD ? 'center' : undefined}
+          style={{ marginTop: '2rem' }}
+        >
           <Grid item>
             <TextField
               placeholder='فیلتر آیتم ها'
@@ -418,10 +439,11 @@ const Hompage = ({ history }) => {
             open={dialogOpen}
             fullScreen={matchesSM}
             onClose={() => setDialogOpen(false)}
+            style={{ marginTop: matchesMD ? '6rem' : 0 }}
           >
             <Grid container justify='center'>
               <Grid item>
-                <Typography variant='h1' gutterBottom>
+                <Typography variant='h2' gutterBottom>
                   آیتم جدید اضافه کنید
                 </Typography>
               </Grid>
@@ -431,24 +453,31 @@ const Hompage = ({ history }) => {
                 container
                 justify='space-between'
                 direction={matchesSM ? 'column' : 'row'}
+                alignItems={matchesSM ? 'center' : undefined}
               >
                 <Grid item>
                   <TextField
                     className={classes.textField}
                     label='آیتم'
-                    style={{ width: matchesSM ? 250 : undefined }}
+                    style={{ width: 250 }}
                     fullWidth={!matchesSM}
                     id='name'
                     value={item}
                     onChange={(event) => setItem(event.target.value)}
                   />
                 </Grid>
-                <Grid item>
+                <Grid
+                  item
+                  style={{
+                    marginRight: matchesMD ? 0 : '-3rem',
+                    marginTop: matchesSM ? '2rem' : 0,
+                  }}
+                >
                   <Select
                     labelId='type'
                     id='type'
                     style={{
-                      width: matchesSM ? 250 : '12em',
+                      width: 250,
                       marginTop: '1rem',
                     }}
                     displayEmpty
@@ -466,7 +495,7 @@ const Hompage = ({ history }) => {
                 <Grid item style={{ marginTop: matchesSM ? 50 : '1rem' }}>
                   <KeyboardDatePicker
                     style={{
-                      width: matchesSM ? 250 : undefined,
+                      width: 250,
                     }}
                     className={classes.datepicker}
                     format='MM/dd/yyyy'
@@ -479,11 +508,12 @@ const Hompage = ({ history }) => {
                 container
                 justify='space-between'
                 direction={matchesSM ? 'column' : 'row'}
-                style={{ marginTop: '2rem' }}
+                alignItems={matchesSM ? 'center' : undefined}
+                style={{ marginTop: matchesSM ? 0 : '2rem' }}
               >
                 <Grid sm={4} item style={{ marginTop: matchesSM ? 50 : null }}>
                   <TextField
-                    style={{ width: matchesSM ? 250 : 235 }}
+                    style={{ width: 250 }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>$</InputAdornment>
@@ -508,10 +538,14 @@ const Hompage = ({ history }) => {
                 <Grid
                   sm={3}
                   item
-                  style={{ marginTop: matchesSM ? 50 : '1rem' }}
+                  style={{
+                    marginTop: matchesSM ? 50 : '1rem',
+                  }}
                 >
                   <FormControlLabel
-                    style={{ marginRight: matchesSM ? 0 : '1rem' }}
+                    style={{
+                      marginRight: matchesSM ? 0 : '1rem',
+                    }}
                     control={
                       <Switch
                         checked={necessary}
@@ -534,7 +568,7 @@ const Hompage = ({ history }) => {
                     کنسل
                   </Button>
                 </Grid>
-                <Grid item>
+                <Grid item style={{ marginRight: '1rem' }}>
                   <Button
                     variant='contained'
                     className={classes.button}
@@ -561,10 +595,11 @@ const Hompage = ({ history }) => {
             open={dialogOpenItemDetail}
             fullScreen={matchesSM}
             onClose={() => setDialogOpenItemDetail(false)}
+            style={{ marginTop: matchesMD ? '6rem' : 0 }}
           >
             <Grid container justify='center'>
               <Grid item>
-                <Typography variant='h1' gutterBottom>
+                <Typography variant='h2' gutterBottom>
                   ویرایش آیتم
                 </Typography>
               </Grid>
@@ -574,24 +609,31 @@ const Hompage = ({ history }) => {
                 container
                 justify='space-between'
                 direction={matchesSM ? 'column' : 'row'}
+                alignItems={matchesSM ? 'center' : undefined}
               >
                 <Grid item>
                   <TextField
                     className={classes.textField}
                     label='آیتم'
-                    style={{ width: matchesSM ? 250 : undefined }}
+                    style={{ width: 250 }}
                     fullWidth={!matchesSM}
                     id='name'
                     value={itemUpdate}
                     onChange={(event) => setItemUpdate(event.target.value)}
                   />
                 </Grid>
-                <Grid item>
+                <Grid
+                  item
+                  style={{
+                    marginRight: matchesMD ? 0 : '-3rem',
+                    marginTop: matchesSM ? '2rem' : 0,
+                  }}
+                >
                   <Select
                     labelId='type'
                     id='type'
                     style={{
-                      width: matchesSM ? 250 : '12em',
+                      width: 250,
                       marginTop: '1rem',
                     }}
                     displayEmpty
@@ -611,7 +653,7 @@ const Hompage = ({ history }) => {
                 <Grid item style={{ marginTop: matchesSM ? 50 : '1rem' }}>
                   <KeyboardDatePicker
                     style={{
-                      width: matchesSM ? 250 : undefined,
+                      width: 250,
                     }}
                     className={classes.datepicker}
                     format='MM/dd/yyyy'
@@ -624,11 +666,12 @@ const Hompage = ({ history }) => {
                 container
                 justify='space-between'
                 direction={matchesSM ? 'column' : 'row'}
-                style={{ marginTop: '2rem' }}
+                alignItems={matchesSM ? 'center' : undefined}
+                style={{ marginTop: matchesSM ? 0 : '2rem' }}
               >
                 <Grid sm={4} item style={{ marginTop: matchesSM ? 50 : null }}>
                   <TextField
-                    style={{ width: matchesSM ? 250 : 235 }}
+                    style={{ width: 250 }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='end'>$</InputAdornment>
@@ -681,7 +724,7 @@ const Hompage = ({ history }) => {
                     کنسل
                   </Button>
                 </Grid>
-                <Grid item>
+                <Grid item style={{ marginRight: '1rem' }}>
                   <Button
                     variant='contained'
                     className={classes.button}

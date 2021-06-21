@@ -2,11 +2,11 @@ import React from 'react';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Switch, Route } from 'react-router-dom';
 import theme from './components/theme';
-import Navbar from './components/navbar/navbar.component';
-import HomePage from './pages/hompage/hompage.component';
-import About from './pages/about/about.component';
-import Register from './components/register/register.component';
-import Login from './components/login/login.component';
+import Navbar from './components/navbar/navbar';
+import HomePage from './pages/hompage/hompage';
+import About from './pages/about/about';
+import Register from './components/register/register';
+import Login from './components/login/login';
 
 const App = () => (
   <ThemeProvider theme={theme}>

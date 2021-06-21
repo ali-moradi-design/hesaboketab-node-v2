@@ -53,13 +53,13 @@ export default createMuiTheme({
     h3: {
       fontWeight: 500,
       fontFamily: 'Yekan Bakh',
-      fontSize: '2rem',
+      fontSize: '1.75rem',
       color: '#000',
     },
     h4: {
       fontFamily: 'Yekan Bakh',
-      fontSize: '1.75rem',
-      color: '#000',
+      fontSize: '1.6rem',
+      color: arcGrey,
       fontWeight: 400,
     },
     h5: {
@@ -84,21 +84,21 @@ export default createMuiTheme({
     },
     subtitle2: {
       fontFamily: 'Yekan Bakh',
-      color: 'white',
-      fontWeight: 300,
-      fontSize: '1.25rem',
+      fontSize: '1.6rem',
+      color: '#fff',
+      fontWeight: 400,
     },
     body1: {
       fontFamily: 'Yekan Bakh',
-      fontSize: '1.25rem',
-      color: arcGrey,
+      fontSize: '1.2rem',
+      color: '#000',
       fontWeight: 400,
     },
     caption: {
       fontFamily: 'Yekan Bakh',
       fontSize: '1rem',
       fontWeight: 300,
-      color: arcGrey,
+      color: white,
     },
     learnButton: {
       borderColor: arcBlue,
@@ -111,6 +111,18 @@ export default createMuiTheme({
     },
   },
   overrides: {
+    MuiDrawer: {
+      paperAnchorRight: {
+        left: 'auto',
+        right: '0',
+      },
+    },
+    MuiMenuItem: {
+      root: {
+        color: '#000',
+        fontSize: '1.4rem',
+      },
+    },
     MuiTableCell: {
       head: {
         fontFamily: 'Yekan Bakh',
