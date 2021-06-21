@@ -9,15 +9,23 @@ const User = require('../models/UserModel');
 // @route     POST /api/v1/auth/register
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const newUser = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    role: req.body.role,
+  };
+  const email = req.body.email;
+
+  const userExists = await User.findOne({ email });
+  console.log(email);
+  console.log(userExists);
+  if (userExists) {
+    return next(new ErrorResponse('User Already exists', 401));
+  }
 
   // Create user
-  const user = await User.create({
-    name,
-    email,
-    password,
-    role,
-  });
+  const user = await User.create(newUser);
 
   sendTokenResponse(user, 200, res);
 });
@@ -193,18 +201,7 @@ const sendTokenResponse = (user, statusCode, res) => {
   // Create token
   const token = user.getSignedJwtToken();
 
-  const options = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-  };
-
-  if (process.env.NODE_ENV === 'production') {
-    options.secure = true;
-  }
-
-  res.status(statusCode).cookie('token', token, options).json({
+  res.status(statusCode).json({
     success: true,
     token,
   });

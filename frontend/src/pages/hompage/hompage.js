@@ -34,18 +34,15 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Snack from '../../components/snackbar/Snack';
 import {
   createTransaction,
   getTransactions,
   deleteTransaction,
-  listTransactionDetails,
   updateTransaction,
   getFilteredTransactions,
 } from '../../redux/transaction/transactions.actions';
-import {
-  TRANSACTION_UPDATE_RESET,
-  TRANSACTION_DETAILS_RESET,
-} from '../../redux/transaction/transactions.types';
+import { TRANSACTION_DETAILS_RESET } from '../../redux/transaction/transactions.types';
 const headCells = [
   { id: 'item', label: 'آیتم' },
   { id: 'amount', label: 'مقدار' },
@@ -114,48 +111,6 @@ const Hompage = ({ history }) => {
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
 
-  const dispatch = useDispatch();
-
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-
-  const transactionList = useSelector((state) => state.transactionList);
-  const { total, income, expence, loading } = transactionList;
-  let transactions = transactionList.transactions;
-
-  const transactionFilterdList = useSelector(
-    (state) => state.transactionFilterdList
-  );
-  const { transactionsFilterd } = transactionFilterdList;
-
-  const transactionDelete = useSelector((state) => state.transactionDelete);
-  const {
-    error,
-    success: successDelete,
-    loading: loadingDelete,
-  } = transactionDelete;
-
-  const transactionDetails = useSelector((state) => state.transactionDetails);
-  const {
-    transaction,
-    error: errorItem,
-    loading: loadingItem,
-  } = transactionDetails;
-
-  const transactionCreate = useSelector((state) => state.transactionCreate);
-  const { success } = transactionCreate;
-
-  const transactionUpdate = useSelector((state) => state.transactionUpdate);
-  const {
-    success: successUpdate,
-    loading: loadingUpdate,
-    error: errorUpdate,
-  } = transactionUpdate;
-
-  if (transactionsFilterd && transactionsFilterd.length > 0) {
-    transactions = transactionsFilterd;
-  }
-
   const kind = ['درآمد', 'هزینه'];
   const [type, setType] = useState('');
   const [currentId, setCurrentId] = useState('');
@@ -177,6 +132,39 @@ const Hompage = ({ history }) => {
   const [necessaryUpdate, setNecessaryUpdate] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogOpenItemDetail, setDialogOpenItemDetail] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const transactionList = useSelector((state) => state.transactionList);
+  const {
+    total,
+    income,
+    expence,
+    loading,
+    error: errorGetAll,
+  } = transactionList;
+  let transactions = transactionList.transactions;
+
+  const transactionFilterdList = useSelector(
+    (state) => state.transactionFilterdList
+  );
+  const { transactionsFilterd } = transactionFilterdList;
+
+  const transactionDelete = useSelector((state) => state.transactionDelete);
+  const { error: errorDelete, success: successDelete } = transactionDelete;
+
+  const transactionCreate = useSelector((state) => state.transactionCreate);
+  const { success: successCreate, error: errorCreate } = transactionCreate;
+
+  const transactionUpdate = useSelector((state) => state.transactionUpdate);
+  const { success: successUpdate, error: errorUpdate } = transactionUpdate;
+
+  if (transactionsFilterd && transactionsFilterd.length > 0) {
+    transactions = transactionsFilterd;
+  }
 
   const addProject = () => {
     let finalAmount;
@@ -316,26 +304,24 @@ const Hompage = ({ history }) => {
     if (!userInfo) {
       history.push('/');
     }
-    // if (transaction) {
-    //   setItemUpdate(transaction.item);
-    //   setAmountUpdate(transaction.amount);
-    //   setHappendAtUpdate(transaction.happendAt);
-    //   setNecessaryUpdate(transaction.necessary);
-    //   setDescriptionUpdate(transaction.description);
-    //   if (transaction.amount > 0) {
-    //     setTypeUpdate('درآمد');
-    //   } else {
-    //     setTypeUpdate('هزینه');
-    //   }
-    //   dispatch({ type: TRANSACTION_UPDATE_RESET });
-    // }
 
     dispatch(getTransactions());
-  }, [dispatch, history, userInfo, success, successDelete, successUpdate]);
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    successCreate,
+    successDelete,
+    successUpdate,
+  ]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Container style={{ marginTop: '6rem' }}>
+        {errorGetAll && <Snack error={errorGetAll} />}
+        {errorDelete && <Snack error={errorDelete} />}
+        {errorUpdate && <Snack error={errorUpdate} />}
+        {errorCreate && <Snack error={errorCreate} />}
         <Grid container justify={matchesSM ? 'center' : undefined}>
           <Grid item sm={12}>
             <Card className={classes.revelotionCard} elevation={1}>
@@ -351,17 +337,23 @@ const Hompage = ({ history }) => {
                   style={{ margin: matchesMD ? '1rem 0' : '0' }}
                 >
                   <Grid container justify='center'>
-                    <Grid item align='center'>
-                      <Typography variant='h3' dir='ltr' align='center'>
-                        {' '}
-                        :بالانس{' '}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant='h3'>
-                        {total ? `${numberWithCommas(total)} تومان` : `0`}{' '}
-                      </Typography>
-                    </Grid>
+                    {loading ? (
+                      <CircularProgress color='secondary' />
+                    ) : (
+                      <>
+                        <Grid item align='center'>
+                          <Typography variant='h3' dir='ltr' align='center'>
+                            {' '}
+                            :بالانس{' '}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant='h3'>
+                            {total ? `${numberWithCommas(total)} تومان` : `0`}{' '}
+                          </Typography>
+                        </Grid>
+                      </>
+                    )}
                   </Grid>
                 </Grid>
                 <Grid
@@ -370,16 +362,22 @@ const Hompage = ({ history }) => {
                   style={{ margin: matchesMD ? '1rem 0' : '0' }}
                 >
                   <Grid container justify='center'>
-                    <Grid item>
-                      <Typography variant='h4' dir='ltr'>
-                        :درآمد
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant='h4'>
-                        {income ? `${numberWithCommas(income)} تومان` : `0`}{' '}
-                      </Typography>
-                    </Grid>
+                    {loading ? (
+                      <CircularProgress color='secondary' />
+                    ) : (
+                      <>
+                        <Grid item>
+                          <Typography variant='h4' dir='ltr'>
+                            :درآمد
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant='h4'>
+                            {income ? `${numberWithCommas(income)} تومان` : `0`}{' '}
+                          </Typography>
+                        </Grid>{' '}
+                      </>
+                    )}
                   </Grid>
                 </Grid>
                 <Grid
@@ -388,18 +386,24 @@ const Hompage = ({ history }) => {
                   style={{ margin: matchesMD ? '1rem 0' : '0' }}
                 >
                   <Grid container justify='center'>
-                    <Grid item>
-                      <Typography variant='h4' dir='ltr'>
-                        :هزینه ها
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant='h4'>
-                        {expence
-                          ? `${numberWithCommas(expence * -1)} تومان`
-                          : `0`}
-                      </Typography>
-                    </Grid>
+                    {loading ? (
+                      <CircularProgress color='secondary' />
+                    ) : (
+                      <>
+                        <Grid item>
+                          <Typography variant='h4' dir='ltr'>
+                            :هزینه ها
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant='h4'>
+                            {expence
+                              ? `${numberWithCommas(expence * -1)} تومان`
+                              : `0`}
+                          </Typography>
+                        </Grid>
+                      </>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
@@ -582,161 +586,147 @@ const Hompage = ({ history }) => {
             </DialogContent>
           </Dialog>
         </Grid>
-        {loadingItem ? (
-          <Grid container justify='center' style={{ padding: '5rem' }}>
+        <Dialog
+          fullWidth
+          maxWidth='md'
+          open={dialogOpenItemDetail}
+          fullScreen={matchesSM}
+          onClose={() => setDialogOpenItemDetail(false)}
+          style={{ marginTop: matchesMD ? '6rem' : 0 }}
+        >
+          <Grid container justify='center'>
             <Grid item>
-              <CircularProgress size={80} />
+              <Typography variant='h2' gutterBottom>
+                ویرایش آیتم
+              </Typography>
             </Grid>
           </Grid>
-        ) : (
-          <Dialog
-            fullWidth
-            maxWidth='md'
-            open={dialogOpenItemDetail}
-            fullScreen={matchesSM}
-            onClose={() => setDialogOpenItemDetail(false)}
-            style={{ marginTop: matchesMD ? '6rem' : 0 }}
-          >
-            <Grid container justify='center'>
+          <DialogContent>
+            <Grid
+              container
+              justify='space-between'
+              direction={matchesSM ? 'column' : 'row'}
+              alignItems={matchesSM ? 'center' : undefined}
+            >
               <Grid item>
-                <Typography variant='h2' gutterBottom>
-                  ویرایش آیتم
-                </Typography>
+                <TextField
+                  className={classes.textField}
+                  label='آیتم'
+                  style={{ width: 250 }}
+                  fullWidth={!matchesSM}
+                  id='name'
+                  value={itemUpdate}
+                  onChange={(event) => setItemUpdate(event.target.value)}
+                />
+              </Grid>
+              <Grid
+                item
+                style={{
+                  marginRight: matchesMD ? 0 : '-3rem',
+                  marginTop: matchesSM ? '2rem' : 0,
+                }}
+              >
+                <Select
+                  labelId='type'
+                  id='type'
+                  style={{
+                    width: 250,
+                    marginTop: '1rem',
+                  }}
+                  displayEmpty
+                  renderValue={
+                    typeUpdate ? undefined : () => 'درآمد یا هزینه ؟'
+                  }
+                  value={typeUpdate}
+                  onChange={(event) => setTypeUpdate(event.target.value)}
+                >
+                  {kind.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item style={{ marginTop: matchesSM ? 50 : '1rem' }}>
+                <KeyboardDatePicker
+                  style={{
+                    width: 250,
+                  }}
+                  className={classes.datepicker}
+                  format='MM/dd/yyyy'
+                  value={happendAtUpdate}
+                  onChange={(newDate) => setHappendAtUpdate(newDate)}
+                />
               </Grid>
             </Grid>
-            <DialogContent>
-              <Grid
-                container
-                justify='space-between'
-                direction={matchesSM ? 'column' : 'row'}
-                alignItems={matchesSM ? 'center' : undefined}
-              >
-                <Grid item>
-                  <TextField
-                    className={classes.textField}
-                    label='آیتم'
-                    style={{ width: 250 }}
-                    fullWidth={!matchesSM}
-                    id='name'
-                    value={itemUpdate}
-                    onChange={(event) => setItemUpdate(event.target.value)}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{
-                    marginRight: matchesMD ? 0 : '-3rem',
-                    marginTop: matchesSM ? '2rem' : 0,
+            <Grid
+              container
+              justify='space-between'
+              direction={matchesSM ? 'column' : 'row'}
+              alignItems={matchesSM ? 'center' : undefined}
+              style={{ marginTop: matchesSM ? 0 : '2rem' }}
+            >
+              <Grid sm={4} item style={{ marginTop: matchesSM ? 50 : null }}>
+                <TextField
+                  style={{ width: 250 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>$</InputAdornment>
+                    ),
                   }}
+                  type='number'
+                  value={amountUpdate < 0 ? amountUpdate * -1 : amountUpdate}
+                  id='amount'
+                  label='مقدار'
+                  onChange={(event) => setAmountUpdate(event.target.value)}
+                />
+              </Grid>
+              <Grid sm={5} item style={{ marginTop: matchesSM ? 50 : null }}>
+                <TextField
+                  style={{ width: matchesSM ? 250 : 350 }}
+                  value={descriptionUpdate}
+                  id='description'
+                  label='توضیحات'
+                  onChange={(event) => setDescriptionUpdate(event.target.value)}
+                />
+              </Grid>
+              <Grid sm={3} item style={{ marginTop: matchesSM ? 50 : '1rem' }}>
+                <FormControlLabel
+                  style={{ marginRight: matchesSM ? 0 : '1rem' }}
+                  control={
+                    <Switch
+                      checked={necessaryUpdate}
+                      color='primary'
+                      onChange={() => setNecessaryUpdate(!necessaryUpdate)}
+                    />
+                  }
+                  label='هزینه ضروری ؟'
+                  labelPlacement={matchesSM ? 'end' : 'start'}
+                />
+              </Grid>
+            </Grid>
+            <Grid container justify='center' style={{ margin: '3em 0' }}>
+              <Grid item>
+                <Button
+                  onClick={() => setDialogOpenItemDetail(false)}
+                  color='primary'
+                  style={{ fontWeight: 300, fontFamily: 'Yekan Bakh' }}
                 >
-                  <Select
-                    labelId='type'
-                    id='type'
-                    style={{
-                      width: 250,
-                      marginTop: '1rem',
-                    }}
-                    displayEmpty
-                    renderValue={
-                      typeUpdate ? undefined : () => 'درآمد یا هزینه ؟'
-                    }
-                    value={typeUpdate}
-                    onChange={(event) => setTypeUpdate(event.target.value)}
-                  >
-                    {kind.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-                <Grid item style={{ marginTop: matchesSM ? 50 : '1rem' }}>
-                  <KeyboardDatePicker
-                    style={{
-                      width: 250,
-                    }}
-                    className={classes.datepicker}
-                    format='MM/dd/yyyy'
-                    value={happendAtUpdate}
-                    onChange={(newDate) => setHappendAtUpdate(newDate)}
-                  />
-                </Grid>
+                  کنسل
+                </Button>
               </Grid>
-              <Grid
-                container
-                justify='space-between'
-                direction={matchesSM ? 'column' : 'row'}
-                alignItems={matchesSM ? 'center' : undefined}
-                style={{ marginTop: matchesSM ? 0 : '2rem' }}
-              >
-                <Grid sm={4} item style={{ marginTop: matchesSM ? 50 : null }}>
-                  <TextField
-                    style={{ width: 250 }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position='end'>$</InputAdornment>
-                      ),
-                    }}
-                    type='number'
-                    value={amountUpdate < 0 ? amountUpdate * -1 : amountUpdate}
-                    id='amount'
-                    label='مقدار'
-                    onChange={(event) => setAmountUpdate(event.target.value)}
-                  />
-                </Grid>
-                <Grid sm={5} item style={{ marginTop: matchesSM ? 50 : null }}>
-                  <TextField
-                    style={{ width: matchesSM ? 250 : 350 }}
-                    value={descriptionUpdate}
-                    id='description'
-                    label='توضیحات'
-                    onChange={(event) =>
-                      setDescriptionUpdate(event.target.value)
-                    }
-                  />
-                </Grid>
-                <Grid
-                  sm={3}
-                  item
-                  style={{ marginTop: matchesSM ? 50 : '1rem' }}
+              <Grid item style={{ marginRight: '1rem' }}>
+                <Button
+                  variant='contained'
+                  className={classes.button}
+                  onClick={handleEditStepTwo}
                 >
-                  <FormControlLabel
-                    style={{ marginRight: matchesSM ? 0 : '1rem' }}
-                    control={
-                      <Switch
-                        checked={necessaryUpdate}
-                        color='primary'
-                        onChange={() => setNecessaryUpdate(!necessaryUpdate)}
-                      />
-                    }
-                    label='هزینه ضروری ؟'
-                    labelPlacement={matchesSM ? 'end' : 'start'}
-                  />
-                </Grid>
+                  ویرایش آیتم
+                </Button>
               </Grid>
-              <Grid container justify='center' style={{ margin: '3em 0' }}>
-                <Grid item>
-                  <Button
-                    onClick={() => setDialogOpenItemDetail(false)}
-                    color='primary'
-                    style={{ fontWeight: 300, fontFamily: 'Yekan Bakh' }}
-                  >
-                    کنسل
-                  </Button>
-                </Grid>
-                <Grid item style={{ marginRight: '1rem' }}>
-                  <Button
-                    variant='contained'
-                    className={classes.button}
-                    onClick={handleEditStepTwo}
-                  >
-                    ویرایش آیتم
-                  </Button>
-                </Grid>
-              </Grid>
-            </DialogContent>
-          </Dialog>
-        )}
+            </Grid>
+          </DialogContent>
+        </Dialog>
         {loading ? (
           <Grid container justify='center' style={{ padding: '5rem' }}>
             <Grid item>
@@ -788,7 +778,10 @@ const Hompage = ({ history }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {stableSort(transactions, getSorting(order, orderBy))
+                      {stableSort(
+                        transactions ? transactions : [],
+                        getSorting(order, orderBy)
+                      )
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage

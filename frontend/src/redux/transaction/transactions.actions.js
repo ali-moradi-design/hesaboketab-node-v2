@@ -51,6 +51,7 @@ export const getTransactions = () => async (dispatch, getState) => {
     });
   }
 };
+
 export const getFilteredTransactions =
   (input) => async (dispatch, getState) => {
     dispatch({ type: TRANSACTION_LIST_FILTERED_REQUEST });
