@@ -25,7 +25,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'x-auth-token': userInfo.token,
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 

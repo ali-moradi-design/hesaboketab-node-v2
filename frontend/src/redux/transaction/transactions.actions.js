@@ -29,7 +29,7 @@ export const getTransactions = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'x-auth-token': userInfo.token,
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
@@ -80,7 +80,7 @@ export const listTransactionDetails = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'x-auth-token': userInfo.token,
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
@@ -113,8 +113,7 @@ export const deleteTransaction = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': userInfo.token,
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
@@ -151,8 +150,7 @@ export const createTransaction =
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': userInfo.token,
+          Authorization: `Bearer ${userInfo.token}`,
         },
       };
 
@@ -193,8 +191,7 @@ export const updateTransaction = (item) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': userInfo.token,
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
