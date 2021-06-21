@@ -1,18 +1,18 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
-} = require('../controllers/usersController');
+} from '../controllers/usersController.js';
 
-const User = require('../models/UserModel');
+import User from '../models/UserModel.js';
 
 const router = express.Router({ mergeParams: true });
 
-const advancedResults = require('../middleware/advancedResults');
-const { protect, authorize } = require('../middleware/auth');
+import advancedResults from '../middleware/advancedResults.js';
+import { protect, authorize } from '../middleware/auth.js';
 
 router.use(protect);
 router.use(authorize('admin'));
@@ -21,4 +21,4 @@ router.route('/').get(advancedResults(User), getUsers).post(createUser);
 
 router.route('/:id').get(getUser).put(updateUser).delete(deleteUser);
 
-module.exports = router;
+export default router;

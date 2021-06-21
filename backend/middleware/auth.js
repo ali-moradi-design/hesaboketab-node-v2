@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
-const asyncHandler = require('./async');
-const ErrorResponse = require('../utils/errorResponse');
-const User = require('../models/UserModel');
+import jwt from 'jsonwebtoken';
+import asyncHandler from './async.js';
+import ErrorResponse from '../utils/errorResponse.js';
+import User from '../models/UserModel.js';
 
 // Protect routes
-exports.protect = asyncHandler(async (req, res, next) => {
+const protect = asyncHandler(async (req, res, next) => {
   const token = req.header('x-auth-token');
 
   // Make sure token exists
@@ -25,7 +25,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 });
 
 // Grant access to specific roles
-exports.authorize = (...roles) => {
+const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
@@ -38,3 +38,5 @@ exports.authorize = (...roles) => {
     next();
   };
 };
+
+export { authorize, protect };

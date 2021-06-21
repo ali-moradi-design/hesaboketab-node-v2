@@ -1,22 +1,22 @@
-const path = require('path');
-const express = require('express');
-const dotenv = require('dotenv');
-const morgan = require('morgan');
-const colors = require('colors');
-const cookieParser = require('cookie-parser');
-const mongoSanitize = require('express-mongo-sanitize');
-const helmet = require('helmet');
-const xss = require('xss-clean');
-const rateLimit = require('express-rate-limit');
-const hpp = require('hpp');
-const cors = require('cors');
-const errorHandler = require('./middleware/errorMiddleware');
-const connectDB = require('./config/db');
+import path from 'path';
+import express from 'express';
+import dotenv from 'dotenv';
+import colors from 'colors';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import mongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
+import xss from 'xss-clean';
+import rateLimit from 'express-rate-limit';
+import hpp from 'hpp';
+import cors from 'cors';
+import errorHandler from './middleware/errorMiddleware.js';
+import connectDB from './config/db.js';
 
 // Route files
-const auth = require('./routes/authRouter');
-const users = require('./routes/usersRouter');
-const transactios = require('./routes/transactionsRouter');
+import auth from './routes/authRouter.js';
+import users from './routes/usersRouter.js';
+import transactios from './routes/transactionsRouter.js';
 
 // Load env vars
 dotenv.config();
@@ -63,11 +63,14 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/transactions', transactios);
 
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  app.use(express.static(path.join(__dirname, '/frontend/build')));
 
   app.get('*', (req, res) =>
-    res.sendFile(path.join(__dirname, '../frontend/build/index.html'))
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
   );
 } else {
   app.get('/', (req, res) => {

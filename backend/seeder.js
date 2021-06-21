@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
-const colors = require('colors');
-const users = require('./data/users');
-const User = require('./models/UserModel');
-const connectDB = require('./config/db');
+import dotenv from 'dotenv';
+import colors from 'colors';
+import users from './data/users.js';
+import User from './models/UserModel.js';
+import connectDB from './config/db.js';
 
 // Load env vars
 dotenv.config();

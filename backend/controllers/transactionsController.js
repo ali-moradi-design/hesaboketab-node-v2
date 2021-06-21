@@ -1,11 +1,11 @@
-const ErrorResponse = require('../utils/errorResponse');
-const asyncHandler = require('../middleware/async');
-const Transaction = require('../models/TransactionModel');
+import ErrorResponse from '../utils/errorResponse.js';
+import asyncHandler from '../middleware/async.js';
+import Transaction from '../models/TransactionModel.js';
 
 // @desc      Get all transactions
 // @route     GET /api/v1/transactions
 // @access    Private
-exports.getTransactions = asyncHandler(async (req, res, next) => {
+const getTransactions = asyncHandler(async (req, res, next) => {
   const transactions = await Transaction.find({ user: req.user.id }).sort({
     date: -1,
   });
@@ -16,7 +16,7 @@ exports.getTransactions = asyncHandler(async (req, res, next) => {
 // @desc      Get single transaction
 // @route     GET /api/v1/transactions/:id
 // @access    Private
-exports.getTransaction = asyncHandler(async (req, res, next) => {
+const getTransaction = asyncHandler(async (req, res, next) => {
   const transaction = await Transaction.findById(req.params.id);
 
   if (!transaction) {
@@ -47,8 +47,8 @@ exports.getTransaction = asyncHandler(async (req, res, next) => {
 // @desc      Create new transaction
 // @route     POST /api/v1/transactions
 // @access    Private
-exports.createTransaction = asyncHandler(async (req, res, next) => {
-  newTransaction = {
+const createTransaction = asyncHandler(async (req, res, next) => {
+  const newTransaction = {
     user: req.user.id,
     item: req.body.item,
     description: req.body.description,
@@ -68,7 +68,7 @@ exports.createTransaction = asyncHandler(async (req, res, next) => {
 // @desc      Update transaction
 // @route     PUT /api/v1/transactions/:id
 // @access    Private
-exports.updateTransaction = asyncHandler(async (req, res, next) => {
+const updateTransaction = asyncHandler(async (req, res, next) => {
   let transaction = await Transaction.findById(req.params.id);
 
   if (!transaction) {
@@ -117,7 +117,7 @@ exports.updateTransaction = asyncHandler(async (req, res, next) => {
 // @desc      Delete transaction
 // @route     DELETE /api/v1/transactions/:id
 // @access    Private
-exports.deleteTransaction = asyncHandler(async (req, res, next) => {
+const deleteTransaction = asyncHandler(async (req, res, next) => {
   const transaction = await Transaction.findById(req.params.id);
 
   if (!transaction) {
@@ -146,3 +146,11 @@ exports.deleteTransaction = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ success: true, data: {} });
 });
+
+export {
+  deleteTransaction,
+  updateTransaction,
+  createTransaction,
+  getTransaction,
+  getTransactions,
+};

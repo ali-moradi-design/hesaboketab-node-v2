@@ -1,20 +1,20 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
   getTransactions,
   getTransaction,
   createTransaction,
   updateTransaction,
   deleteTransaction,
-} = require('../controllers/transactionsController');
+} from '../controllers/transactionsController.js';
 
-const Transaction = require('../models/TransactionModel');
+import Transaction from '../models/TransactionModel.js';
 
 // Include other resource routers
 
 const router = express.Router();
 
-const advancedResults = require('../middleware/advancedResults');
-const { protect, authorize } = require('../middleware/auth');
+import advancedResults from '../middleware/advancedResults.js';
+import { protect, authorize } from '../middleware/auth.js';
 
 // Re-route into other resource routers
 
@@ -29,4 +29,4 @@ router
   .put(protect, authorize('user', 'admin'), updateTransaction)
   .delete(protect, authorize('user', 'admin'), deleteTransaction);
 
-module.exports = router;
+export default router;
