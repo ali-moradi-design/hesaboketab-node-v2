@@ -6,14 +6,14 @@
 
 ```
 npm install
-cd cliebt
+cd frontend
 npm install
 ```
 
 ### Run
 
 ```
-# Run frontend (:3000) & backend (:5010)
+# Run application
 npm run dev
 
 # Run backend only
@@ -32,7 +32,7 @@ npm run build
 Sample User Logins
 
 mehrad@gmail.com
-12345678
+123456
 
 
 ```
